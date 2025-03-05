@@ -13,15 +13,20 @@ $(shell mkdir -p $(OUT_DIR))
 # Phony targets
 .PHONY: all clean
 
-all: tb_crc_calc
+all: tb_shift_register
 
-tb_crc_calc: 
-	$(IVL) -o $(OUT_DIR)/$@.vvp ../src/crc_calculator.v tb_crc_calculator.v
-	$(VVP) $(OUT_DIR)/$@.vvp
-
-tb_shift_register:
+tb_shift_register: 
 	$(IVL) -o $(OUT_DIR)/$@.vvp ../src/shift_register.v tb_shift_register.v
 	$(VVP) $(OUT_DIR)/$@.vvp
+
+tb_pwm_module: 
+	$(IVL) -o $(OUT_DIR)/$@.vvp ../src/pwm_module.v tb_pwm_module.v
+	$(VVP) $(OUT_DIR)/$@.vvp
+
+tb_top: 
+	$(IVL) -o $(OUT_DIR)/$@.vvp ../src/tt_um_devinatkin_pwm.v ../src/shift_register.v ../src/pwm_module.v tb_tt_um_devinatkin_pwm.v
+	$(VVP) $(OUT_DIR)/$@.vvp
+
 
 clean:
 	@echo Cleaning up...

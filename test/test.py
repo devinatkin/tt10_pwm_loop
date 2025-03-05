@@ -8,29 +8,31 @@ from cocotb.triggers import ClockCycles
 
 @cocotb.test()
 async def test_project(dut):
-    dut._log.info("Start")
+    """Testbench for tt_um_devinatkin_pwm"""
+    
+    dut._log.info("Starting test...")
 
-    # Set the clock period to 10 us (100 KHz)
-    clock = Clock(dut.clk, 10, units="us")
+    # Create and start a 100 MHz clock (10 ns period)
+    clock = Clock(dut.clk, 10, units="ns")
     cocotb.start_soon(clock.start())
 
-    # Reset
-    dut._log.info("Reset")
-    dut.ui_in.value = 0
+    # Apply reset
+    dut._log.info("Applying reset")
     dut.rst_n.value = 0
+    dut.ui_in.value = 0  # Set input to zero initially
     await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1
+    dut._log.info("Reset released")
 
-    dut._log.info("Test project behavior")
+    # Test case: Apply a sequence of input values
+    test_values = [0x10, 0x20, 0x40, 0x80, 0xFF]  # Example duty cycle values
+    
+    for val in test_values:
+        dut.ui_in.value = val  # Set the shift register input
+        await ClockCycles(dut.clk, 20)  # Wait some cycles to propagate
+        dut._log.info(f"Input: {val:02X} | PWM Outputs: {dut.uo_out.value:02X}")
 
-    # Set the input values you want to test
-    dut.ui_in.value = 20
+    # Ensure simulation runs for a sufficient period
+    await ClockCycles(dut.clk, 200)
 
-    # Wait for one clock cycle to see the output values
-    await ClockCycles(dut.clk, 1)
-
-    # The following assersion is just an example of how to check the output values.
-    # Change it to match the actual expected output of your module:
-
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.
+    dut._log.info("Test completed")
