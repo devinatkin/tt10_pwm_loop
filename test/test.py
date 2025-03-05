@@ -30,7 +30,7 @@ async def test_project(dut):
     for val in test_values:
         dut.ui_in.value = val  # Set the shift register input
         await ClockCycles(dut.clk, 20)  # Wait some cycles to propagate
-        dut._log.info(f"Input: {val:02X} | PWM Outputs: {dut.uo_out.value:02X}")
+        # dut._log.info(f"Input: {val:02X} | PWM Outputs: {dut.uo_out.value:02X}")
 
     # Ensure simulation runs for a sufficient period
     await ClockCycles(dut.clk, 200)

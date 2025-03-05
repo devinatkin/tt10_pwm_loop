@@ -1,4 +1,3 @@
-`timescale 1ns/1ps
 
 module tt_um_devinatkin_pwm_tb;
 

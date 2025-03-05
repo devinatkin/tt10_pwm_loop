@@ -1,7 +1,7 @@
 # Makefile for testing with iverilog and vvp
 
 # Define the compiler and simulator
-IVL = iverilog -g2012
+IVL = iverilog
 VVP = vvp
 
 # Output directory for simulation files
@@ -13,7 +13,7 @@ $(shell mkdir -p $(OUT_DIR))
 # Phony targets
 .PHONY: all clean
 
-all: tb_shift_register
+all: tb_shift_register tb_pwm_module tb_top
 
 tb_shift_register: 
 	$(IVL) -o $(OUT_DIR)/$@.vvp ../src/shift_register.v tb_shift_register.v
@@ -23,8 +23,12 @@ tb_pwm_module:
 	$(IVL) -o $(OUT_DIR)/$@.vvp ../src/pwm_module.v tb_pwm_module.v
 	$(VVP) $(OUT_DIR)/$@.vvp
 
+tb_pulse_on_change: 
+	$(IVL) -o $(OUT_DIR)/$@.vvp ../src/pulse_on_change.v tb_pulse_on_change.v
+	$(VVP) $(OUT_DIR)/$@.vvp
+
 tb_top: 
-	$(IVL) -o $(OUT_DIR)/$@.vvp ../src/tt_um_devinatkin_pwm.v ../src/shift_register.v ../src/pwm_module.v tb_tt_um_devinatkin_pwm.v
+	$(IVL) -o $(OUT_DIR)/$@.vvp ../src/tt_um_devinatkin_pwm.v ../src/shift_register.v ../src/pwm_module.v tb_tt_um_devinatkin_pwm.v ../src/pulse_on_change.v 
 	$(VVP) $(OUT_DIR)/$@.vvp
 
 

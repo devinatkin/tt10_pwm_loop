@@ -1,4 +1,3 @@
-`timescale 1ns/1ps
 
 module pwm_module
 #(parameter bit_width = 8)
@@ -24,7 +23,7 @@ always @(posedge clk) begin
         end else begin
             counter <= counter + 1;
         end
-        pwm_out <= (counter < duty);
+        pwm_out <= (counter <= duty);
     end
 end
 
